@@ -47,6 +47,31 @@ export default function Home() {
       }
   };
 
+  const uploadHandler = async (event): Promise<boolean> => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    const imageFile = document.querySelector("#imageInput");
+    const imageTitle = document.querySelector("#titleInput");
+
+    formData.append('image', imageFile.files[0]);
+    formData.append('title', imageTitle.value);
+
+    const success = await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (success) {
+      populateCarousel();
+      activeCheck();
+      event.target.reset();
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     populateCarousel();
     activeCheck();
@@ -65,6 +90,11 @@ export default function Home() {
         <h1>Paperframe</h1>
       </header>
       <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
+      <form onSubmit={uploadHandler}>
+        <input type="text" name="title" id="titleInput" />
+        <input type="file" name="image" id="imageInput" />
+        <input type="submit" name="submit" value="Upload" />
+      </form>
     </div>
   );
 }
