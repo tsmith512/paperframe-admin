@@ -2,18 +2,39 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { Carousel } from '../components/Carousel';
 
-export default function Home() {
-  const [carousel, setCarousel] = useState([]);
-  const [current, setCurrent] = useState(null);
+import { imageCarousel } from 'paperframe-api/src'
 
-  useEffect(() => {
-    fetch('https://paperframe-api.tsmithcreative.workers.dev/api/carousel')
+export default function Home() {
+  const [carousel, setCarousel] = useState([] as imageCarousel);
+  const [current, setCurrent] = useState(null as null | number);
+
+  const populateCarousel = async (): Promise<void> => {
+    await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/carousel')
       .then((res) => res.json())
       .then((payload) => setCarousel(payload))
       .catch((err) => {
         console.log(err);
-        return [];
+        setCarousel([]);
       });
+  };
+
+  const activeCheck = async (): Promise<void> => {
+    await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/now/id')
+      .then((res) => res.json())
+      .then((payload) => setCurrent(parseInt(payload)))
+      .catch((err) => {
+        console.log(err);
+        return setCurrent(null);
+      });
+  };
+
+  useEffect(() => {
+    populateCarousel();
+    activeCheck();
+
+    setInterval(() => {
+      activeCheck();
+    }, 1000 * 600);
   }, []);
 
   return (
@@ -24,7 +45,7 @@ export default function Home() {
       <header>
         <h1>Paperframe</h1>
       </header>
-      <Carousel images={carousel} />
+      <Carousel images={carousel} active={current} />
     </div>
   );
 }

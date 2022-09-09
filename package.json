@@ -25,6 +25,7 @@
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "paperframe-api": "github:tsmith512/paperframe-api#trunk",
     "typescript": "^4.3.5"
   }
 }

@@ -1,15 +1,18 @@
 import style from './carousel.module.scss';
 
+import { imageCarousel } from 'paperframe-api/src';
+
 interface CarouselProps {
   children?: any;
-  images: any[];
+  images: imageCarousel;
+  active: null | number;
 }
 
 export const Carousel = (props: CarouselProps) => {
   return (
     <div className={style.carousel}>
       {props.images.map((image) => (
-        <div key={image.id} className={style.slide}>
+        <div key={image.id} className={style.slide} data-active={(props.active === image.id) ? true : null}>
           <div className={style.order}>{image.order}</div>
           <div className={style.image}>
             <img

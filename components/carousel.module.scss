@@ -6,12 +6,15 @@
   display: flex;
   flex-wrap: nowrap;
 
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid #999;
-  margin-bottom: 1rem;
 
   justify-content: center;
   align-items: center;
+
+  &[data-active] {
+    background-color: #EEFFEE;
+  }
 }
 
 .order {
