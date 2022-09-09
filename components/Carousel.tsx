@@ -13,7 +13,11 @@ export const Carousel = (props: CarouselProps) => {
   return (
     <div className={style.carousel}>
       {props.images.map((image) => (
-        <div key={image.id} className={style.slide} data-active={(props.active === image.id) ? true : null}>
+        <div
+          key={image.id}
+          className={style.slide}
+          data-active={props.active === image.id ? true : null}
+        >
           <div className={style.order}>{image.order}</div>
           <div className={style.image}>
             <img
@@ -25,7 +29,14 @@ export const Carousel = (props: CarouselProps) => {
           <div className={style.actions}>
             <button>Display</button>
             <button>Rename</button>
-            <button onClick={(e) => { props.deleteHandler(image.id) }}>Delete</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                props.deleteHandler(image.id);
+              }}
+            >
+              Delete
+            </button>
           </div>
         </div>
       ))}

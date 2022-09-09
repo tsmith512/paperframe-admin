@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { Carousel } from '../components/Carousel';
 
-import { imageCarousel } from 'paperframe-api/src'
+import { imageCarousel } from 'paperframe-api/src';
 
 export default function Home() {
   const [carousel, setCarousel] = useState([] as imageCarousel);
@@ -29,38 +29,44 @@ export default function Home() {
   };
 
   const deleteHandler = async (id: number): Promise<boolean> => {
-    const success = await fetch(`https://paperframe-api.tsmithcreative.workers.dev/api/image/${id}`, {
-      method: 'DELETE'
-    })
+    const success = await fetch(
+      `https://paperframe-api.tsmithcreative.workers.dev/api/image/${id}`,
+      {
+        method: 'DELETE',
+      }
+    )
       .then((res) => res.status === 204)
       .catch((err) => {
         console.log(err);
         return false;
       });
 
-      if (success) {
-        populateCarousel();
-        activeCheck();
-        return true;
-      } else {
-        return false;
-      }
+    if (success) {
+      populateCarousel();
+      activeCheck();
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const uploadHandler = async (event): Promise<boolean> => {
     event.preventDefault();
 
     const formData = new FormData();
-    const imageFile = document.querySelector("#imageInput");
-    const imageTitle = document.querySelector("#titleInput");
+    const imageFile = document.querySelector('#imageInput');
+    const imageTitle = document.querySelector('#titleInput');
 
     formData.append('image', imageFile.files[0]);
     formData.append('title', imageTitle.value);
 
-    const success = await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/image', {
-      method: 'POST',
-      body: formData,
-    });
+    const success = await fetch(
+      'https://paperframe-api.tsmithcreative.workers.dev/api/image',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
 
     if (success) {
       populateCarousel();
