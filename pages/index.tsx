@@ -28,6 +28,25 @@ export default function Home() {
       });
   };
 
+  const deleteHandler = async (id: number): Promise<boolean> => {
+    const success = await fetch(`https://paperframe-api.tsmithcreative.workers.dev/api/image/${id}`, {
+      method: 'DELETE'
+    })
+      .then((res) => res.status === 204)
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+
+      if (success) {
+        populateCarousel();
+        activeCheck();
+        return true;
+      } else {
+        return false;
+      }
+  };
+
   useEffect(() => {
     populateCarousel();
     activeCheck();
@@ -45,7 +64,7 @@ export default function Home() {
       <header>
         <h1>Paperframe</h1>
       </header>
-      <Carousel images={carousel} active={current} />
+      <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
     </div>
   );
 }

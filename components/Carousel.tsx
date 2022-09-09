@@ -6,6 +6,7 @@ interface CarouselProps {
   children?: any;
   images: imageCarousel;
   active: null | number;
+  deleteHandler: (id: number) => Promise<boolean>;
 }
 
 export const Carousel = (props: CarouselProps) => {
@@ -24,7 +25,7 @@ export const Carousel = (props: CarouselProps) => {
           <div className={style.actions}>
             <button>Display</button>
             <button>Rename</button>
-            <button>Delete</button>
+            <button onClick={(e) => { props.deleteHandler(image.id) }}>Delete</button>
           </div>
         </div>
       ))}
