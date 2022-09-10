@@ -16,5 +16,8 @@
     "incremental": true
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "types": [
+    "@cloudflare/workers-types"
+  ]
 }

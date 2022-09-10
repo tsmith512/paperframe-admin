@@ -12,7 +12,7 @@ export default function Home() {
   const populateCarousel = async (): Promise<void> => {
     await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/carousel')
       .then((res) => res.json())
-      .then((payload) => setCarousel(payload))
+      .then((payload: imageCarousel) => setCarousel(payload))
       .catch((err) => {
         console.log(err);
         setCarousel([]);
@@ -22,7 +22,7 @@ export default function Home() {
   const activeCheck = async (): Promise<void> => {
     await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/now/id')
       .then((res) => res.json())
-      .then((payload) => setCurrent(parseInt(payload)))
+      .then((payload: string) => setCurrent(parseInt(payload)))
       .catch((err) => {
         console.log(err);
         return setCurrent(null);
@@ -55,8 +55,8 @@ export default function Home() {
     event.preventDefault();
 
     const formData = new FormData();
-    const imageFile = document.querySelector('#imageInput');
-    const imageTitle = document.querySelector('#titleInput');
+    const imageFile = document.querySelector('#imageInput') as HTMLInputElement;
+    const imageTitle = document.querySelector('#titleInput') as HTMLInputElement;
 
     formData.append('image', imageFile.files[0]);
     formData.append('title', imageTitle.value);
