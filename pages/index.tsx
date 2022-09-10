@@ -8,8 +8,14 @@ import { UploadForm } from '../components/UploadForm';
 export default function Home() {
   const [carousel, setCarousel] = useState([] as imageCarousel);
   const [current, setCurrent] = useState(null as null | number);
+  const [authed, setAuthed] = useState(false);
 
   const populateCarousel = async (): Promise<void> => {
+    // @TODO: Temporary while API testing
+    if (!authed) {
+      return;
+    }
+
     await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/carousel')
       .then((res) => res.json())
       .then((payload: imageCarousel) => setCarousel(payload))
@@ -20,6 +26,11 @@ export default function Home() {
   };
 
   const activeCheck = async (): Promise<void> => {
+    // @TODO: Temporary while API testing
+    if (!authed) {
+      return;
+    }
+
     await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/now/id')
       .then((res) => res.json())
       .then((payload: string) => setCurrent(parseInt(payload)))
@@ -79,6 +90,11 @@ export default function Home() {
     }
   };
 
+  const authenticate = async (): Promise<void> => {
+    console.log('Trying to authenticate now...');
+    setAuthed(true);
+  };
+
   useEffect(() => {
     populateCarousel();
     activeCheck();
@@ -86,7 +102,7 @@ export default function Home() {
     setInterval(() => {
       activeCheck();
     }, 1000 * 600);
-  }, []);
+  }, [authed]);
 
   return (
     <div className="container">
@@ -95,6 +111,8 @@ export default function Home() {
       </Head>
       <header>
         <h1>Paperframe</h1>
+        <h2>Currently {authed ? 'logged in' : 'logged out'}</h2>
+        <button onClick={authenticate}>Log In</button>
       </header>
       <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
       <UploadForm uploadHandler={uploadHandler} />
