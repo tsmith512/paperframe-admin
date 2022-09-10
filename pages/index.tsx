@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Carousel } from '../components/Carousel';
 
 import { imageCarousel } from 'paperframe-api/src';
+import { UploadForm } from '../components/UploadForm';
 
 export default function Home() {
   const [carousel, setCarousel] = useState([] as imageCarousel);
@@ -96,11 +97,7 @@ export default function Home() {
         <h1>Paperframe</h1>
       </header>
       <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
-      <form onSubmit={uploadHandler}>
-        <input type="text" name="title" id="titleInput" />
-        <input type="file" name="image" id="imageInput" />
-        <input type="submit" name="submit" value="Upload" />
-      </form>
+      <UploadForm uploadHandler={uploadHandler} />
     </div>
   );
 }
