@@ -16,7 +16,7 @@ export default function Home() {
       return;
     }
 
-    await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/carousel')
+    await fetch('https://paperframe.tsmith.photos/api/carousel')
       .then((res) => res.json())
       .then((payload: imageCarousel) => setCarousel(payload))
       .catch((err) => {
@@ -31,7 +31,7 @@ export default function Home() {
       return;
     }
 
-    await fetch('https://paperframe-api.tsmithcreative.workers.dev/api/now/id')
+    await fetch('https://paperframe.tsmith.photos/api/now/id')
       .then((res) => res.json())
       .then((payload: string) => setCurrent(parseInt(payload)))
       .catch((err) => {
@@ -41,12 +41,14 @@ export default function Home() {
   };
 
   const deleteHandler = async (id: number): Promise<boolean> => {
-    const success = await fetch(
-      `https://paperframe-api.tsmithcreative.workers.dev/api/image/${id}`,
-      {
-        method: 'DELETE',
-      }
-    )
+    // This UI will be hidden and API will forbid, but bail if unauthenticated
+    if (!authed) {
+      return;
+    }
+
+    const success = await fetch(`https://paperframe.tsmith.photos/api/image/${id}`, {
+      method: 'DELETE',
+    })
       .then((res) => res.status === 204)
       .catch((err) => {
         console.log(err);
@@ -63,6 +65,11 @@ export default function Home() {
   };
 
   const uploadHandler = async (event): Promise<boolean> => {
+    // This UI will be hidden and API will forbid, but bail if unauthenticated
+    if (!authed) {
+      return;
+    }
+
     event.preventDefault();
 
     const formData = new FormData();
@@ -72,13 +79,10 @@ export default function Home() {
     formData.append('image', imageFile.files[0]);
     formData.append('title', imageTitle.value);
 
-    const success = await fetch(
-      'https://paperframe-api.tsmithcreative.workers.dev/api/image',
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
+    const success = await fetch('https://paperframe.tsmith.photos/api/image', {
+      method: 'POST',
+      body: formData,
+    });
 
     if (success) {
       populateCarousel();
@@ -90,19 +94,30 @@ export default function Home() {
     }
   };
 
-  const authenticate = async (): Promise<void> => {
-    console.log('Trying to authenticate now...');
-    setAuthed(true);
+  const authCheck = async (): Promise<void> => {
+    const isAuthenticated = await fetch('https://paperframe.tsmith.photos/auth/check')
+      .then((res) => res.status === 200)
+      .catch(() => false);
+
+    setAuthed(isAuthenticated);
   };
 
+  // Fire an auth check on load
+  useEffect(() => {
+    authCheck();
+  });
+
+  // Fire an update to the carousel and active frame on load and also on an
+  // authentication state change
   useEffect(() => {
     populateCarousel();
     activeCheck();
-
-    setInterval(() => {
-      activeCheck();
-    }, 1000 * 600);
   }, [authed]);
+
+  // And check the active slide every ten minutes
+  setInterval(() => {
+    activeCheck();
+  }, 1000 * 600);
 
   return (
     <div className="container">
@@ -111,11 +126,14 @@ export default function Home() {
       </Head>
       <header>
         <h1>Paperframe</h1>
-        <h2>Currently {authed ? 'logged in' : 'logged out'}</h2>
-        <button onClick={authenticate}>Log In</button>
+        {authed ? (
+          <a href="https://paperframe.tsmith.photos/auth/logout">Logout</a>
+        ) : (
+          <a href="https://paperframe.tsmith.photos/auth/login">Login</a>
+        )}
       </header>
       <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
-      <UploadForm uploadHandler={uploadHandler} />
+      {authed && <UploadForm uploadHandler={uploadHandler} />}
     </div>
   );
 }
