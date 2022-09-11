@@ -8,8 +8,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cloudflare/pages-plugin-cloudflare-access": "^1.0.1",
-    "cookie": "^0.5.0",
     "date-fns": "^2.11.1",
     "gray-matter": "^4.0.2",
     "next": "latest",
