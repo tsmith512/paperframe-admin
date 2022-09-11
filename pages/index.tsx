@@ -95,8 +95,8 @@ export default function Home() {
   };
 
   const authCheck = async (): Promise<void> => {
-    const isAuthenticated = await fetch('https://paperframe.tsmith.photos/auth/check')
-      .then((res) => res.status === 200)
+    const isAuthenticated = await fetch('https://paperframe.tsmith.photos/api/auth/check')
+      .then((res) => res.status === 204)
       .catch(() => false);
 
     setAuthed(isAuthenticated);
@@ -127,9 +127,9 @@ export default function Home() {
       <header>
         <h1>Paperframe</h1>
         {authed ? (
-          <a href="https://paperframe.tsmith.photos/auth/logout">Logout</a>
+          <a href="https://paperframe.tsmith.photos/api/auth/logout">Logout</a>
         ) : (
-          <a href="https://paperframe.tsmith.photos/auth/login">Login</a>
+          <a href="https://paperframe.tsmith.photos/api/auth/login">Login</a>
         )}
       </header>
       <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
