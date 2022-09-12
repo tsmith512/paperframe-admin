@@ -106,7 +106,7 @@ export default function Home() {
 
   // Check the active slide every 15 minutes, assuming the window is visible.
   setInterval(() => {
-    if (document.visibilityState === 'visible') {
+    if (typeof window !== 'undefined' && document.visibilityState === 'visible') {
       activeCheck();
     }
   }, 1000 * 900);
@@ -124,7 +124,12 @@ export default function Home() {
           <a href="https://paperframe.tsmith.photos/api/auth/login">Login</a>
         )}
       </header>
-      <Carousel images={carousel} active={current} deleteHandler={deleteHandler} authenticated={authed} />
+      <Carousel
+        images={carousel}
+        active={current}
+        deleteHandler={deleteHandler}
+        authenticated={authed}
+      />
       {authed && <UploadForm uploadHandler={uploadHandler} />}
     </div>
   );

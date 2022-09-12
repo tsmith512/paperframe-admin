@@ -27,7 +27,7 @@ export const Carousel = (props: CarouselProps) => {
             />
           </div>
           <div className={style.title}>{image.title}</div>
-          { props.authenticated &&
+          {props.authenticated && (
             <div className={style.actions}>
               <button>Display</button>
               <button>Rename</button>
@@ -40,7 +40,7 @@ export const Carousel = (props: CarouselProps) => {
                 Delete
               </button>
             </div>
-          }
+          )}
         </div>
       ))}
     </div>
