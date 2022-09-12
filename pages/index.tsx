@@ -11,11 +11,6 @@ export default function Home() {
   const [authed, setAuthed] = useState(false);
 
   const populateCarousel = async (): Promise<void> => {
-    // @TODO: Temporary while API testing
-    if (!authed) {
-      return;
-    }
-
     await fetch('https://paperframe.tsmith.photos/api/carousel')
       .then((res) => res.json())
       .then((payload: imageCarousel) => setCarousel(payload))
@@ -26,11 +21,6 @@ export default function Home() {
   };
 
   const activeCheck = async (): Promise<void> => {
-    // @TODO: Temporary while API testing
-    if (!authed) {
-      return;
-    }
-
     await fetch('https://paperframe.tsmith.photos/api/now/id')
       .then((res) => res.json())
       .then((payload: string) => setCurrent(parseInt(payload)))
@@ -134,7 +124,7 @@ export default function Home() {
           <a href="https://paperframe.tsmith.photos/api/auth/login">Login</a>
         )}
       </header>
-      <Carousel images={carousel} active={current} deleteHandler={deleteHandler} />
+      <Carousel images={carousel} active={current} deleteHandler={deleteHandler} authenticated={authed} />
       {authed && <UploadForm uploadHandler={uploadHandler} />}
     </div>
   );

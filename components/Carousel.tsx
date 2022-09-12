@@ -7,6 +7,7 @@ interface CarouselProps {
   images: imageCarousel;
   active: null | number;
   deleteHandler: (id: number) => Promise<boolean>;
+  authenticated: boolean;
 }
 
 export const Carousel = (props: CarouselProps) => {
@@ -26,18 +27,20 @@ export const Carousel = (props: CarouselProps) => {
             />
           </div>
           <div className={style.title}>{image.title}</div>
-          <div className={style.actions}>
-            <button>Display</button>
-            <button>Rename</button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                props.deleteHandler(image.id);
-              }}
-            >
-              Delete
-            </button>
-          </div>
+          { props.authenticated &&
+            <div className={style.actions}>
+              <button>Display</button>
+              <button>Rename</button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.deleteHandler(image.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          }
         </div>
       ))}
     </div>
