@@ -114,10 +114,12 @@ export default function Home() {
     activeCheck();
   }, [authed]);
 
-  // And check the active slide every ten minutes
+  // Check the active slide every 15 minutes, assuming the window is visible.
   setInterval(() => {
-    activeCheck();
-  }, 1000 * 600);
+    if (document.visibilityState === 'visible') {
+      activeCheck();
+    }
+  }, 1000 * 900);
 
   return (
     <div className="container">
