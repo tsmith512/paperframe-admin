@@ -11,7 +11,7 @@ export default function Home() {
   const [authed, setAuthed] = useState(false);
 
   const populateCarousel = async (): Promise<void> => {
-    await fetch('https://paperframe.tsmith.photos/api/carousel')
+    await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/carousel`)
       .then((res) => res.json())
       .then((payload: imageCarousel) => setCarousel(payload))
       .catch((err) => {
@@ -21,7 +21,7 @@ export default function Home() {
   };
 
   const activeCheck = async (): Promise<void> => {
-    await fetch('https://paperframe.tsmith.photos/api/now/id')
+    await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now/id`)
       .then((res) => res.json())
       .then((payload: string) => setCurrent(parseInt(payload)))
       .catch((err) => {
@@ -36,7 +36,7 @@ export default function Home() {
       return;
     }
 
-    const success = await fetch(`https://paperframe.tsmith.photos/api/image/${id}`, {
+    const success = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image/${id}`, {
       method: 'DELETE',
     })
       .then((res) => res.status === 204)
@@ -69,7 +69,7 @@ export default function Home() {
     formData.append('image', imageFile.files[0]);
     formData.append('title', imageTitle.value);
 
-    const success = await fetch('https://paperframe.tsmith.photos/api/image', {
+    const success = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image`, {
       method: 'POST',
       body: formData,
     });
@@ -85,7 +85,7 @@ export default function Home() {
   };
 
   const authCheck = async (): Promise<void> => {
-    const isAuthenticated = await fetch('https://paperframe.tsmith.photos/api/auth/check')
+    const isAuthenticated = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/check`)
       .then((res) => res.status === 204)
       .catch(() => false);
 
@@ -119,9 +119,9 @@ export default function Home() {
       <header>
         <h1>Paperframe</h1>
         {authed ? (
-          <a href="https://paperframe.tsmith.photos/api/auth/logout">Logout</a>
+          <a href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/logout`}>Logout</a>
         ) : (
-          <a href="https://paperframe.tsmith.photos/api/auth/login">Login</a>
+          <a href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/login`}>Login</a>
         )}
       </header>
       <Carousel

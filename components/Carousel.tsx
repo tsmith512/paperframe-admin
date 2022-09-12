@@ -22,7 +22,7 @@ export const Carousel = (props: CarouselProps) => {
           <div className={style.order}>{image.order}</div>
           <div className={style.image}>
             <img
-              src={`https://paperframe-api.tsmithcreative.workers.dev/api/image/${image.id}`}
+              src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image/${image.id}`}
               alt={image.title}
             />
           </div>
