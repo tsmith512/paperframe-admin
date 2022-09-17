@@ -36,9 +36,12 @@ export default function Home() {
       return;
     }
 
-    const success = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image/${id}`, {
-      method: 'DELETE',
-    })
+    const success = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image/${id}`,
+      {
+        method: 'DELETE',
+      }
+    )
       .then((res) => res.status === 204)
       .catch((err) => {
         console.log(err);
@@ -85,7 +88,9 @@ export default function Home() {
   };
 
   const authCheck = async (): Promise<void> => {
-    const isAuthenticated = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/check`)
+    const isAuthenticated = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/check`
+    )
       .then((res) => res.status === 204)
       .catch(() => false);
 

@@ -1,4 +1,7 @@
 {
+  "name": "paperframe-admin",
+  "version": "1.0.0",
+  "author": "Taylor Smith <tsmith@tsmith.com> (https://tsmith.com)",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -28,5 +31,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "paperframe-api": "github:tsmith512/paperframe-api#trunk",
     "typescript": "^4.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsmith512/paperframe-admin"
   }
 }
