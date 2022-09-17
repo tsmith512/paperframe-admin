@@ -33,6 +33,12 @@
 .title {
   flex: 1 0 auto;
   margin: 0 1rem;
+
+  span {
+    display: block;
+    font-size: 0.625rem;
+    &:before { content: "#"; }
+  }
 }
 
 .actions {
