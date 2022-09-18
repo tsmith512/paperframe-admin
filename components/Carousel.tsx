@@ -40,8 +40,8 @@ export const Carousel = (props: CarouselProps) => {
               >
                 Display
               </button>
-              <button>Rename</button>
               <button
+                className="secondary outline"
                 onClick={(e) => {
                   e.preventDefault();
                   props.deleteHandler(image.id);

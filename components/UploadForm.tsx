@@ -6,20 +6,18 @@ interface uploadFormProps {
 
 export const UploadForm = (props: uploadFormProps) => {
   return (
-    <div className={style.uploadForm}>
-      <form onSubmit={props.uploadHandler}>
-        <label>
-          <span>Title:</span>
-          <input type="text" name="title" id="titleInput" />
-        </label>
-        <label>
-          <span>File:</span>
-          <input type="file" name="image" id="imageInput" />
-        </label>
-        <div>
-          <input type="submit" name="submit" value="Upload" />
-        </div>
-      </form>
-    </div>
+    <form className={style.uploadForm} onSubmit={props.uploadHandler}>
+      <label>
+        <span>Title:</span>
+        <input type="text" name="title" id="titleInput" />
+      </label>
+      <label>
+        <span>File:</span>
+        <input type="file" name="image" id="imageInput" />
+      </label>
+      <div>
+        <input type="submit" name="submit" value="Upload" />
+      </div>
+    </form>
   );
 };

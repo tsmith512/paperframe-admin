@@ -146,9 +146,20 @@ export default function Home() {
       <header>
         <h1>Paperframe</h1>
         {authed ? (
-          <a href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/logout`}>Logout</a>
+          <a
+            href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/logout`}
+            className="contrast outline"
+            role="button"
+          >
+            Logout
+          </a>
         ) : (
-          <a href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/login`}>Login</a>
+          <a
+            href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/login`}
+            role="button"
+          >
+            Login
+          </a>
         )}
       </header>
       <Carousel
