@@ -5,10 +5,9 @@ import { Carousel } from '../components/Carousel';
 import { imageCarousel } from 'paperframe-api/src';
 import { UploadForm } from '../components/UploadForm';
 
-export default function Home() {
+export default function Home(props) {
   const [carousel, setCarousel] = useState([] as imageCarousel);
   const [current, setCurrent] = useState(null as null | number);
-  const [authed, setAuthed] = useState(false);
 
   const getCarousel = async (): Promise<void> => {
     await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/carousel`)
@@ -32,7 +31,7 @@ export default function Home() {
 
   const updateCurrentHandler = async (index: number): Promise<boolean> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
-    if (!authed) {
+    if (!props.authed) {
       return;
     }
 
@@ -54,7 +53,7 @@ export default function Home() {
 
   const deleteHandler = async (id: number): Promise<boolean> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
-    if (!authed) {
+    if (!props.authed) {
       return;
     }
 
@@ -81,7 +80,7 @@ export default function Home() {
 
   const uploadHandler = async (event): Promise<boolean> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
-    if (!authed) {
+    if (!props.authed) {
       return;
     }
 
@@ -109,27 +108,12 @@ export default function Home() {
     }
   };
 
-  const authCheck = async (): Promise<void> => {
-    const isAuthenticated = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/check`
-    )
-      .then((res) => res.status === 204)
-      .catch(() => false);
-
-    setAuthed(isAuthenticated);
-  };
-
-  // Fire an auth check on load
-  useEffect(() => {
-    authCheck();
-  });
-
   // Fire an update to the carousel and active frame on load and also on an
   // authentication state change
   useEffect(() => {
     getCarousel();
     getCurrent();
-  }, [authed]);
+  }, [props.authed]);
 
   // Check the active slide every 15 minutes, assuming the window is visible.
   setInterval(() => {
@@ -141,35 +125,15 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>Paperframe</title>
       </Head>
-      <header>
-        <h1>Paperframe</h1>
-        {authed ? (
-          <a
-            href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/logout`}
-            className="contrast outline"
-            role="button"
-          >
-            Logout
-          </a>
-        ) : (
-          <a
-            href={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/login`}
-            role="button"
-          >
-            Login
-          </a>
-        )}
-      </header>
       <Carousel
         images={carousel}
         active={current}
         updateCurrentHandler={updateCurrentHandler}
         deleteHandler={deleteHandler}
-        authenticated={authed}
+        authenticated={props.authed}
       />
-      {authed && <UploadForm uploadHandler={uploadHandler} />}
+      {props.authed && <UploadForm uploadHandler={uploadHandler} />}
     </div>
   );
 }
