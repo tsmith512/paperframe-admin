@@ -124,7 +124,10 @@ export default function Home(props) {
 
   return (
     <div className="container">
-      <Head></Head>
+      <Head>
+        <title>Image Carousel | Paperframe</title>
+      </Head>
+      <h2>Image Carousel</h2>
       <Carousel
         images={carousel}
         active={current}
