@@ -10,7 +10,7 @@ export default function Home() {
   const [current, setCurrent] = useState(null as null | number);
   const [authed, setAuthed] = useState(false);
 
-  const populateCarousel = async (): Promise<void> => {
+  const getCarousel = async (): Promise<void> => {
     await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/carousel`)
       .then((res) => res.json())
       .then((payload: imageCarousel) => setCarousel(payload))
@@ -20,7 +20,7 @@ export default function Home() {
       });
   };
 
-  const activeCheck = async (): Promise<void> => {
+  const getCurrent = async (): Promise<void> => {
     await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now/id`)
       .then((res) => res.json())
       .then((payload: string) => setCurrent(parseInt(payload)))
@@ -75,8 +75,8 @@ export default function Home() {
       });
 
     if (success) {
-      populateCarousel();
-      activeCheck();
+      getCarousel();
+      getCurrent();
       return true;
     } else {
       return false;
@@ -104,8 +104,8 @@ export default function Home() {
     });
 
     if (success) {
-      populateCarousel();
-      activeCheck();
+      getCarousel();
+      getCurrent();
       event.target.reset();
       return true;
     } else {
@@ -131,14 +131,14 @@ export default function Home() {
   // Fire an update to the carousel and active frame on load and also on an
   // authentication state change
   useEffect(() => {
-    populateCarousel();
-    activeCheck();
+    getCarousel();
+    getCurrent();
   }, [authed]);
 
   // Check the active slide every 15 minutes, assuming the window is visible.
   setInterval(() => {
     if (typeof window !== 'undefined' && document.visibilityState === 'visible') {
-      activeCheck();
+      getCurrent();
     }
   }, 1000 * 900);
 
