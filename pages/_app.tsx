@@ -18,6 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
     )
       .then((res) => res.status === 204)
       .catch(() => false);
+
+    setAuthed(isAuthenticated);
   };
 
   // Fire an auth check on load
