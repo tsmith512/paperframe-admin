@@ -30,6 +30,32 @@ export default function Home() {
       });
   };
 
+  const updateCurrentHandler = async (index: number): Promise<boolean> => {
+    // This UI will be hidden and API will forbid, but bail if unauthenticated
+    if (!authed) {
+      return;
+    }
+
+    const success = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now`,
+      {
+        method: 'POST',
+        body: JSON.stringify(index)
+      }
+    )
+      .then((res) => res.status === 204)
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+
+      if (success) {
+        // No need to fetch it from remote, we just set it.
+        setCurrent(index);
+      }
+
+  }
+
   const deleteHandler = async (id: number): Promise<boolean> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
     if (!authed) {
@@ -132,6 +158,7 @@ export default function Home() {
       <Carousel
         images={carousel}
         active={current}
+        updateCurrentHandler={updateCurrentHandler}
         deleteHandler={deleteHandler}
         authenticated={authed}
       />

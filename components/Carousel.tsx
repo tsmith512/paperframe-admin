@@ -6,6 +6,7 @@ interface CarouselProps {
   children?: any;
   images: imageCarousel;
   active: null | number;
+  updateCurrentHandler: (id: number) => Promise<boolean>;
   deleteHandler: (id: number) => Promise<boolean>;
   authenticated: boolean;
 }
@@ -31,7 +32,14 @@ export const Carousel = (props: CarouselProps) => {
           </div>
           {props.authenticated && (
             <div className={style.actions}>
-              <button>Display</button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.updateCurrentHandler(image.id);
+                }}
+              >
+                Display
+              </button>
               <button>Rename</button>
               <button
                 onClick={(e) => {
