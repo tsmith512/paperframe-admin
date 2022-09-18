@@ -8,6 +8,7 @@ interface CarouselProps {
   active: null | number;
   updateCurrentHandler: (id: number) => Promise<boolean>;
   deleteHandler: (id: number) => Promise<boolean>;
+  reorderHandler: (index: number, direction: number) => void;
   authenticated: boolean;
 }
 
@@ -20,7 +21,31 @@ export const Carousel = (props: CarouselProps) => {
           className={style.slide}
           data-active={props.active === image.id ? true : null}
         >
-          <div className={style.order}>{index}</div>
+          <div className={style.order}>
+            {index !== 0 && (
+              <button
+                className="outline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.reorderHandler(index, -1);
+                }}
+              >
+                &uarr;
+              </button>
+            )}
+            <div>{index}</div>
+            {index < props.images.length - 1 && (
+              <button
+                className="outline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  props.reorderHandler(index, 1);
+                }}
+              >
+                &darr;
+              </button>
+            )}
+          </div>
           <div className={style.image}>
             <img
               src={`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/image/${image.id}`}

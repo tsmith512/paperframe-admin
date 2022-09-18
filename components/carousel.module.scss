@@ -40,6 +40,27 @@ $columns: 620px;
   margin: 0 0 1rem auto;
   @media screen and (min-width: $columns) {
     margin: 0 1rem 0 auto;
+    flex-direction: column;
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+
+
+  div, button {
+    width: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+  }
+
+  button {
+    opacity: 0.375;
+    transition: 0.2s ease-out opacity;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
