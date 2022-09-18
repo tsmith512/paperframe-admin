@@ -1,9 +1,13 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { Carousel } from '../components/Carousel';
 
 import { imageCarousel } from 'paperframe-api/src';
-import { UploadForm } from '../components/UploadForm';
+
+import {
+  Carousel,
+  UploadForm
+} from '../components';
+
 
 export default function Home(props) {
   const [carousel, setCarousel] = useState([] as imageCarousel);
