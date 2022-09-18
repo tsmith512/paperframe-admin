@@ -35,6 +35,7 @@ $columns: 620px;
 }
 
 .order {
+  font-weight: 200;
   flex: 0 0 auto;
   margin: 0 0 1rem auto;
   @media screen and (min-width: $columns) {

@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { imageCarousel } from 'paperframe-api/src';
 
-import {
-  Carousel,
-  UploadForm
-} from '../components';
-
+import { Carousel, UploadForm } from '../components';
 
 export default function Home(props) {
   const [carousel, setCarousel] = useState([] as imageCarousel);
@@ -128,8 +124,7 @@ export default function Home(props) {
 
   return (
     <div className="container">
-      <Head>
-      </Head>
+      <Head></Head>
       <Carousel
         images={carousel}
         active={current}
