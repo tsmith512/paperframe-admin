@@ -1,7 +1,7 @@
 import style from './uploadform.module.scss';
 
 interface uploadFormProps {
-  uploadHandler: (event) => Promise<boolean>;
+  uploadHandler: (event) => Promise<void>;
 }
 
 export const UploadForm = (props: uploadFormProps) => {

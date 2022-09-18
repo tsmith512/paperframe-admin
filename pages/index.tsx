@@ -1,6 +1,21 @@
+//  _         _
+// (_)_ _  __| |_____ __
+// | | ' \/ _` / -_) \ /
+// |_|_||_\__,_\___/_\_\
+//
+// Main image carousel admin page. Inherits authed (bool) property from _app, so
+// it starts as a readonly display of images in the system, ordered, with the
+// active one highlighted. If the user is authenticated, buttons to change the
+// order and upload/delete frames are added.
+//
+// The carousel and which frame is currently on display are fetched here and
+// passed in props to child components. Handlers to add/change frames, current,
+// and order are here, too.
+
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
+// Pull in the types used by the API project so they can stay in sync.
 import { imageCarousel } from 'paperframe-api/src';
 
 import { Carousel, UploadForm } from '../components';
@@ -10,6 +25,14 @@ export default function Home(props) {
   const [current, setCurrent] = useState(null as null | number);
   const [unsavedChanges, setUnsavedChanges] = useState(false as boolean);
 
+  //                                _
+  //   __ __ _ _ _ ___ _  _ ___ ___| |
+  //  / _/ _` | '_/ _ \ || (_-</ -_) |
+  //  \__\__,_|_| \___/\_,_/__/\___|_|
+
+  /**
+   * Get the current carousel and save it to state
+   */
   const getCarousel = async (): Promise<void> => {
     await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/carousel`)
       .then((res) => res.json())
@@ -20,39 +43,38 @@ export default function Home(props) {
       });
   };
 
-  const getCurrent = async (): Promise<void> => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now/id`)
-      .then((res) => res.json())
-      .then((payload: string) => setCurrent(parseInt(payload)))
-      .catch((err) => {
-        console.log(err);
-        return setCurrent(null);
-      });
-  };
-
-  const updateCurrentHandler = async (index: number): Promise<boolean> => {
-    // This UI will be hidden and API will forbid, but bail if unauthenticated
-    if (!props.authed) {
+  /**
+   * Move an image (by its index) forward or backward in the carousel array.
+   * This is a local change!
+   *
+   * @param index (number) the image to move, as an index in the carousel array
+   * @param direction (-1 | 1) move it earlier (-1) or later (1) in the stack
+   * @returns void, but sets new carousel in state, sets the unsavedChanges flag
+   */
+  const reorderHandler = (index: number, direction: number): void => {
+    // The first can't get earlier; the last can't get later.
+    if (index === 0 && direction === -1) {
+      return;
+    } else if (index === carousel.length - 1 && direction === 1) {
       return;
     }
 
-    const success = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now`, {
-      method: 'POST',
-      body: JSON.stringify(index),
-    })
-      .then((res) => res.status === 204)
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
+    // Duplicate the carousel so we can edit it and then set it as state
+    const newCarousel = [...carousel];
+    const image = newCarousel.splice(index, 1);
+    newCarousel.splice(index + direction, 0, image.pop());
 
-    if (success) {
-      // No need to fetch it from remote, we just set it.
-      setCurrent(index);
-    }
+    // Commit the new carousel to state, but it is LOCAL ONLY, so warn the user.
+    setCarousel(newCarousel);
+    setUnsavedChanges(true);
   };
 
-  const updateOrderHandler = async (): Promise<boolean> => {
+  /**
+   * Update the order of the carousel based on current state
+   *
+   * @returns void, but clears UnsavedChanges state flag on success
+   */
+  const updateOrderHandler = async (): Promise<void> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
     if (!props.authed) {
       return;
@@ -74,25 +96,65 @@ export default function Home(props) {
     }
   };
 
-  const reorderHandler = (index: number, direction: number): void => {
-    // The first can't get earlier; the last can't get later.
-    if (index === 0 && direction === -1) {
-      return;
-    } else if (index === carousel.length - 1 && direction === 1) {
+  //                          _      __
+  //  __ _  _ _ _ _ _ ___ _ _| |_   / _|_ _ __ _ _ __  ___
+  // / _| || | '_| '_/ -_) ' \  _| |  _| '_/ _` | '  \/ -_)
+  // \__|\_,_|_| |_| \___|_||_\__| |_| |_| \__,_|_|_|_\___|
+
+  /**
+   * Get the current frame and save to state
+   */
+  const getCurrent = async (): Promise<void> => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now/id`)
+      .then((res) => res.json())
+      .then((payload: string) => setCurrent(parseInt(payload)))
+      .catch((err) => {
+        console.log(err);
+        return setCurrent(null);
+      });
+  };
+
+  /**
+   * Update the current frame on display
+   *
+   * @param index (number) the image ID to set as the current frame
+   * @returns void, but does set the new current frame in state on success
+   */
+  const updateCurrentHandler = async (index: number): Promise<void> => {
+    // This UI will be hidden and API will forbid, but bail if unauthenticated
+    if (!props.authed) {
       return;
     }
 
-    // Duplicate the carousel so we can edit it and then set it as state
-    const newCarousel = [...carousel];
-    const image = newCarousel.splice(index, 1);
-    newCarousel.splice(index + direction, 0, image.pop());
+    const success = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/now`, {
+      method: 'POST',
+      body: JSON.stringify(index),
+    })
+      .then((res) => res.status === 204)
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
 
-    // Commit the new carousel to state, but it is LOCAL ONLY, so warn the user.
-    setCarousel(newCarousel);
-    setUnsavedChanges(true);
+    if (success) {
+      // No need to fetch it from remote, we just set it.
+      setCurrent(index);
+    }
   };
 
-  const deleteHandler = async (id: number): Promise<boolean> => {
+  //  _
+  // (_)_ __  __ _ __ _ ___ ___
+  // | | '  \/ _` / _` / -_|_-<
+  // |_|_|_|_\__,_\__, \___/__/
+  //              |___/
+
+  /**
+   * Delete an image (by ID) from the system
+   *
+   * @param id (number) image id to delete from storage and metadata
+   * @returns void, but calls a re-fetch of carousel and current frame
+   */
+  const deleteHandler = async (id: number): Promise<void> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
     if (!props.authed) {
       return;
@@ -113,13 +175,19 @@ export default function Home(props) {
     if (success) {
       getCarousel();
       getCurrent();
-      return true;
-    } else {
-      return false;
     }
   };
 
-  const uploadHandler = async (event): Promise<boolean> => {
+  /**
+   * Upload a new image to the API from the UploadForm component.
+   *
+   * @TODO: Should this move into that component?
+   * @TODO: There's some shitty form field identification in here.
+   *
+   * @param event (form submission event) the onSubmit handler from the form
+   * @returns void, but if successful, re-fetches current/carousel, resets form
+   */
+  const uploadHandler = async (event): Promise<void> => {
     // This UI will be hidden and API will forbid, but bail if unauthenticated
     if (!props.authed) {
       return;
@@ -143,9 +211,6 @@ export default function Home(props) {
       getCarousel();
       getCurrent();
       event.target.reset();
-      return true;
-    } else {
-      return false;
     }
   };
 

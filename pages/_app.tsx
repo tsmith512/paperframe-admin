@@ -1,3 +1,13 @@
+//      __ _ _ __ _ __
+//     / _` | '_ \ '_ \
+//   __\__,_| .__/ .__/
+//  |___|   |_|  |_|
+//
+// Outer container for all app pages/screens.
+//
+// Authentication is checked and saved to state here, then passed as the
+// `authed` (bool) prop to pages.
+
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 

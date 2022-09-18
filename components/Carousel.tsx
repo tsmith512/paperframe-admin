@@ -6,8 +6,8 @@ interface CarouselProps {
   children?: any;
   images: imageCarousel;
   active: null | number;
-  updateCurrentHandler: (id: number) => Promise<boolean>;
-  deleteHandler: (id: number) => Promise<boolean>;
+  updateCurrentHandler: (id: number) => Promise<void>;
+  deleteHandler: (id: number) => Promise<void>;
   reorderHandler: (index: number, direction: number) => void;
   authenticated: boolean;
 }
