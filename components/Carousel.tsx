@@ -22,7 +22,7 @@ export const Carousel = (props: CarouselProps) => {
           data-active={props.active === image.id ? true : null}
         >
           <div className={style.order}>
-            {index !== 0 && (
+            {index !== 0 && props.authenticated && (
               <button
                 className="outline"
                 onClick={(e) => {
@@ -34,7 +34,7 @@ export const Carousel = (props: CarouselProps) => {
               </button>
             )}
             <div>{index}</div>
-            {index < props.images.length - 1 && (
+            {index < props.images.length - 1 && props.authenticated && (
               <button
                 className="outline"
                 onClick={(e) => {
